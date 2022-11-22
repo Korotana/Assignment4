@@ -37,6 +37,12 @@ public class BlobView extends StackPane implements BlobModelListener, IModelList
             gc.setFill(Color.BLACK);
             gc.fillText(Integer.toString(model.getBlobs().indexOf(b)),b.x-b.r + b.r,b.y-b.r + b.r);
         });
+
+        model.rubberBandArrayList.forEach(band -> {
+            gc.setStroke(Color.GREEN);
+            gc.strokeRect(band.left,band.top,band.width,band.height);
+        });
+
     }
 
     public void setModel(BlobModel newModel) {

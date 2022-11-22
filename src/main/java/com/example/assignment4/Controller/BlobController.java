@@ -37,6 +37,8 @@ public class BlobController {
                     prevY = event.getY();
                     currentState = State.DRAGGING;
                 } else {
+                    model.rubberLeft = event.getX();
+                    model.rubberTop = event.getY();
                     currentState = State.PREPARE_CREATE;
                 }
             }
@@ -44,15 +46,21 @@ public class BlobController {
     }
 
     public void handleDragged(MouseEvent event) {
+        dX = event.getX() - prevX;
+        dY = event.getY() - prevY;
+        prevX = event.getX();
+        prevY = event.getY();
         switch (currentState) {
             case PREPARE_CREATE -> {
-                currentState = State.READY;
+                if (isShiftDown) currentState = State.READY;
+                model.createRubberBand(event.getX(), event.getY(), false);
             }
             case DRAGGING -> {
-                dX = event.getX() - prevX;
-                dY = event.getY() - prevY;
-                prevX = event.getX();
-                prevY = event.getY();
+//                dX = event.getX() - prevX;
+//                dY = event.getY() - prevY;
+//                prevX = event.getX();
+//                prevY = event.getY();
+
                 if (isShiftDown){
                     model.resizeBlob(iModel.getSelected(),dX);
                 }else {
@@ -69,18 +77,21 @@ public class BlobController {
                     model.addBlob(event.getX(),event.getY());
                     iModel.setSelected(model.whichHit(event.getX(),event.getY()));
                 }else {
-                    iModel.setSelected(null);
+                    iModel.unselect();
                 }
                 currentState = State.READY;
             }
             case DRAGGING -> {
-                iModel.unselect();
+//                iModel.unselect();
+                model.createRubberBand(event.getX(), event.getY(), true);
                 currentState = State.READY;
             }
         }
     }
 
     public void handleDeleteKeyPressed() {
+        System.out.println("In Del");
+        System.out.println(iModel.getSelected());
         if (iModel.getSelected() != null) model.deleteBlob(iModel.getSelected());
         else System.out.println("NOTHING SELECTED TO DELETE");
 

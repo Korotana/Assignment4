@@ -2,6 +2,7 @@ package com.example.assignment4.Model;
 
 import com.example.assignment4.Blob;
 import com.example.assignment4.Interface.BlobModelListener;
+import com.example.assignment4.RubberBand;
 import com.example.assignment4.View.BlobView;
 
 import java.util.*;
@@ -9,10 +10,13 @@ import java.util.*;
 public class BlobModel {
     private List<BlobModelListener> subscribers;
     private List<Blob> blobs;
+    public ArrayList<RubberBand> rubberBandArrayList;
+    public double rubberTop, rubberLeft, rubberWidth, rubberHeight;
 
     public BlobModel() {
         subscribers = new ArrayList<>();
         blobs = new ArrayList<>();
+        rubberBandArrayList = new ArrayList<>();
     }
 
     public void addBlob(double x, double y) {
@@ -61,5 +65,25 @@ public class BlobModel {
             if (b.contains(x,y)) return b;
         }
         return null;
+    }
+
+    Integer selectionsNum = 1;
+    public HashMap<Integer, ArrayList<Blob>> createRubberBand(double w, double h, boolean selectionComplete) {
+        HashMap<Integer,ArrayList<Blob>> selections = new HashMap<>();
+        RubberBand band = new RubberBand(rubberLeft, rubberTop, w-rubberLeft, h-rubberTop);
+        rubberBandArrayList.add(band);
+        if (selectionComplete){
+            ArrayList<Blob> selectionList = new ArrayList<>();
+            blobs.forEach(b -> {
+                if (band.checkHit(b.x,b.y)){
+                    selectionList.add(b);
+                }
+            });
+            if (selectionList.size() > 0) selections.put(selectionsNum,selectionList);
+        }
+        selectionsNum+=1;
+        notifySubscribers();
+        rubberBandArrayList.remove(band);
+        return selections;
     }
 }
