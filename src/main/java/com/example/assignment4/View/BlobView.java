@@ -5,6 +5,7 @@ import com.example.assignment4.Interface.BlobModelListener;
 import com.example.assignment4.Interface.IModelListener;
 import com.example.assignment4.Model.BlobModel;
 import com.example.assignment4.Model.InteractionModel;
+import com.example.assignment4.RubberBand;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
@@ -33,6 +34,11 @@ public class BlobView extends StackPane implements BlobModelListener, IModelList
             } else {
                 gc.setFill(Color.BEIGE);
             }
+            if (iModel.getRubberBandSelections() != null){
+                iModel.getRubberBandSelections().forEach((num, blobs) -> {
+                    if (blobs.contains(b)) gc.setFill(Color.TOMATO);
+                });
+            }
             gc.fillOval(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
             gc.setFill(Color.BLACK);
             gc.fillText(Integer.toString(model.getBlobs().indexOf(b)),b.x-b.r + b.r,b.y-b.r + b.r);
@@ -40,8 +46,17 @@ public class BlobView extends StackPane implements BlobModelListener, IModelList
 
         model.rubberBandArrayList.forEach(band -> {
             gc.setStroke(Color.GREEN);
-            gc.strokeRect(band.left,band.top,band.width,band.height);
+            strokeRubberBand(band);
         });
+
+    }
+
+    private void strokeRubberBand(RubberBand band) {
+
+            gc.strokeLine(band.left,band.top,band.left+ band.width,band.top);  // horizontal line with start points
+            gc.strokeLine(band.left,band.top,band.left,band.top+band.height); // vertical line with start points
+            gc.strokeLine(band.left,band.top+band.height,band.left+ band.width,band.top+band.height);
+            gc.strokeLine(band.left + band.width, band.top,band.left + band.width,band.top + band.height);
 
     }
 

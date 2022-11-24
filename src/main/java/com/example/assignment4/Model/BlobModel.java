@@ -41,6 +41,13 @@ public class BlobModel {
         notifySubscribers();
     }
 
+    public void deleteMultipleBlob(HashMap<Integer, ArrayList<Blob>> rubberBandSelections) {
+        rubberBandSelections.forEach((num, blobs) -> {
+            this.blobs.removeAll(blobs);
+        });
+        notifySubscribers();
+    }
+
     public void addSubscriber(BlobView sub) {
         subscribers.add(sub);
     }
@@ -76,14 +83,16 @@ public class BlobModel {
             ArrayList<Blob> selectionList = new ArrayList<>();
             blobs.forEach(b -> {
                 if (band.checkHit(b.x,b.y)){
+//                    System.out.println("hbj");
                     selectionList.add(b);
                 }
             });
-            if (selectionList.size() > 0) selections.put(selectionsNum,selectionList);
+            if (selectionList.size() > 0) selections.put(selectionsNum,selectionList);selectionsNum+=1;
+            System.out.println(selections);
         }
-        selectionsNum+=1;
         notifySubscribers();
         rubberBandArrayList.remove(band);
         return selections;
     }
+
 }

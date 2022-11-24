@@ -5,6 +5,9 @@ import com.example.assignment4.Model.BlobModel;
 import com.example.assignment4.Model.InteractionModel;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class BlobController {
     BlobModel model;
     InteractionModel iModel;
@@ -77,13 +80,15 @@ public class BlobController {
                     model.addBlob(event.getX(),event.getY());
                     iModel.setSelected(model.whichHit(event.getX(),event.getY()));
                 }else {
+                    iModel.setRubberBandSelections(model.createRubberBand(event.getX(), event.getY(), true));
                     iModel.unselect();
                 }
+//                System.out.println("--------111----"+iModel.rubberBandSelections.get(1));
+//                System.out.println("-----22-----"+iModel.rubberBandSelections.get(2));
                 currentState = State.READY;
             }
             case DRAGGING -> {
 //                iModel.unselect();
-                model.createRubberBand(event.getX(), event.getY(), true);
                 currentState = State.READY;
             }
         }
@@ -91,8 +96,8 @@ public class BlobController {
 
     public void handleDeleteKeyPressed() {
         System.out.println("In Del");
-        System.out.println(iModel.getSelected());
         if (iModel.getSelected() != null) model.deleteBlob(iModel.getSelected());
+        if (iModel.getRubberBandSelections() != null) model.deleteMultipleBlob(iModel.getRubberBandSelections());
         else System.out.println("NOTHING SELECTED TO DELETE");
 
     }
