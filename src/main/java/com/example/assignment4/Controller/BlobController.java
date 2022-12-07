@@ -1,8 +1,10 @@
 package com.example.assignment4.Controller;
 
 import com.example.assignment4.Blob;
+import com.example.assignment4.Command.CreateCommand;
 import com.example.assignment4.Model.BlobModel;
 import com.example.assignment4.Model.InteractionModel;
+import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
@@ -77,7 +79,9 @@ public class BlobController {
         switch (currentState) {
             case PREPARE_CREATE -> {
                 if (isShiftDown) {
-                    model.addBlob(event.getX(),event.getY());
+                    CreateCommand cc = new CreateCommand(model,event.getX(),event.getY());
+                    cc.doIt();
+                    iModel.addToUndoStack(cc);
                     iModel.setSelected(model.whichHit(event.getX(),event.getY()));
                 }else {
                     iModel.setRubberBandSelections(model.createRubberBand(event.getX(), event.getY(), true));
@@ -101,6 +105,11 @@ public class BlobController {
         else System.out.println("NOTHING SELECTED TO DELETE");
 
     }
+
+    public void handleUndo() {iModel.handleUndo();}
+
+    public void handleRedo() {iModel.handleRedo();}
+
 
 }
 

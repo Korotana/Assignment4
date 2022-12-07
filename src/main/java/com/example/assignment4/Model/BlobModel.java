@@ -19,8 +19,20 @@ public class BlobModel {
         rubberBandArrayList = new ArrayList<>();
     }
 
-    public void addBlob(double x, double y) {
-        blobs.add(new Blob(x,y));
+    public void addBlob(Blob b) {
+        blobs.add(b);
+        notifySubscribers();
+    }
+
+    public Blob createBlob(double x, double y){
+        Blob b = new Blob(x,y);
+        blobs.add(b);
+        notifySubscribers();
+        return b;
+    }
+
+    public void deleteBlob(Blob b) {
+        blobs.remove(b);
         notifySubscribers();
     }
 
@@ -36,10 +48,10 @@ public class BlobModel {
         notifySubscribers();
     }
 
-    public void deleteBlob(Blob b){
-        blobs.remove(b);
-        notifySubscribers();
-    }
+//    public void deleteBlob(Blob b){
+//        blobs.remove(b);
+//        notifySubscribers();
+//    }
 
     public void deleteMultipleBlob(HashMap<Integer, ArrayList<Blob>> rubberBandSelections) {
         rubberBandSelections.forEach((num, blobs) -> {

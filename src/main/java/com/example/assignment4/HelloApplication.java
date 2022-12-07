@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+    boolean zPressed = false;
+    boolean ctrlPressed = false;
+    boolean rPressed = false;
     @Override
     public void start(Stage stage) throws IOException {
         MainUI uiRoot = new MainUI();
@@ -18,10 +21,17 @@ public class HelloApplication extends Application {
         scene.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SHIFT) uiRoot.controller.isShiftDown = true;
             if (keyEvent.getCode() == KeyCode.DELETE) uiRoot.controller.handleDeleteKeyPressed();
-
+            if (keyEvent.getCode() == KeyCode.Z) zPressed = true;
+            if (keyEvent.getCode() == KeyCode.CONTROL) ctrlPressed = true;
+            if (keyEvent.getCode() == KeyCode.R) rPressed = true;
+            if (zPressed && ctrlPressed) uiRoot.controller.handleUndo();
+            if (rPressed && ctrlPressed) uiRoot.controller.handleRedo();
         });
         scene.setOnKeyReleased(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SHIFT) uiRoot.controller.isShiftDown = false;
+            if (keyEvent.getCode() == KeyCode.Z) zPressed = false;
+            if (keyEvent.getCode() == KeyCode.CONTROL) ctrlPressed = false;
+            if (keyEvent.getCode() == KeyCode.R) rPressed = false;
         });
         stage.show();
     }
