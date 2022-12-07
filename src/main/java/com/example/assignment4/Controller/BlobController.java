@@ -2,6 +2,7 @@ package com.example.assignment4.Controller;
 
 import com.example.assignment4.Blob;
 import com.example.assignment4.Command.CreateCommand;
+import com.example.assignment4.Command.MoveCommand;
 import com.example.assignment4.Model.BlobModel;
 import com.example.assignment4.Model.InteractionModel;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ public class BlobController {
     InteractionModel iModel;
     double prevX,prevY;
     double dX,dY;
+    double dragStartX, dragStartY;
 
     public boolean isShiftDown = false;
 
@@ -40,6 +42,8 @@ public class BlobController {
                     iModel.setSelected(b);
                     prevX = event.getX();
                     prevY = event.getY();
+                    dragStartX = event.getX();
+                    dragStartY = event.getY();
                     currentState = State.DRAGGING;
                 } else {
                     model.rubberLeft = event.getX();
@@ -69,6 +73,7 @@ public class BlobController {
                 if (isShiftDown){
                     model.resizeBlob(iModel.getSelected(),dX);
                 }else {
+
                     model.moveBlob(iModel.getSelected(), dX, dY);
                 }
             }
@@ -93,6 +98,11 @@ public class BlobController {
             }
             case DRAGGING -> {
 //                iModel.unselect();
+                double totalDX = event.getX() - dragStartX;
+                double totalDY = event.getY() - dragStartY;
+                MoveCommand mc = new MoveCommand(model, iModel.getSelected(), totalDX, totalDY);
+                iModel.addToUndoStack(mc);
+
                 currentState = State.READY;
             }
         }
