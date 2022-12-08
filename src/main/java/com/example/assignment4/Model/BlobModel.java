@@ -43,7 +43,7 @@ public class BlobModel {
 
     public void resizeBlob(Blob b,double nr){
         if (b.r > 5) b.r += nr;
-        else {b.r = 5.1;
+        if (b.r < 5){b.r = 5.1;
             System.out.println("CANNOT DECREASE MORE THAN THAT");}
         notifySubscribers();
     }
