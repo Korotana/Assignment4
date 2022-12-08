@@ -36,6 +36,7 @@ public class InteractionModel {
 
     public void setSelected(Blob b) {
         selected = b;
+        System.out.println(selected);
         this.rubberBandSelections = null;
         notifySubscribers();
     }

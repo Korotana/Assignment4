@@ -6,33 +6,58 @@ import com.example.assignment4.RubberBand;
 import com.example.assignment4.View.BlobView;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BlobModel {
-    private List<BlobModelListener> subscribers;
-    private List<Blob> blobs;
+    private final List<BlobModelListener> subscribers;
+    private final List<Blob> blobs;
+    private final LinkedHashMap<Integer,List<Blob>> blobsMap;
     public ArrayList<RubberBand> rubberBandArrayList;
     public double rubberTop, rubberLeft, rubberWidth, rubberHeight;
 
     public BlobModel() {
         subscribers = new ArrayList<>();
         blobs = new ArrayList<>();
+        blobsMap = new LinkedHashMap<>();
         rubberBandArrayList = new ArrayList<>();
     }
 
     public void addBlob(Blob b) {
-        blobs.add(b);
+//        blobs.add(b);
+        ArrayList<Blob> blob = new ArrayList<Blob>();
+        blob.add(b);
+        blobsMap.put(b.index, blob);
         notifySubscribers();
     }
 
     public Blob createBlob(double x, double y){
         Blob b = new Blob(x,y);
-        blobs.add(b);
+//        blobs.add(b);
+        ArrayList<Blob> blob = new ArrayList<Blob>();
+        blob.add(b);
+        if (!blobsMap.isEmpty()){
+            AtomicInteger lastIndex = new AtomicInteger();
+            blobsMap.forEach((index, bloblist) -> {
+                for (Blob circle: bloblist) {
+                    if (circle.index > lastIndex.get()) lastIndex.set(circle.index);
+                }
+            });
+            b.index = lastIndex.get()+1;
+        }
+        blobsMap.put(b.index, blob);
         notifySubscribers();
         return b;
     }
 
     public void deleteBlob(Blob b) {
-        blobs.remove(b);
+        AtomicInteger temp = new AtomicInteger();
+        blobsMap.forEach((i,blob) -> {
+            blob.remove(b);
+            if (blob.size() == 0) temp.set(0);
+        } );
+//        blobsMap
+//        blobsMap.remove(temp.get());
         notifySubscribers();
     }
 
@@ -73,17 +98,24 @@ public class BlobModel {
     }
 
     public boolean hitBlob(double x, double y) {
-        for (Blob b : blobs) {
-            if (b.contains(x,y)) return true;
-        }
-        return false;
+        AtomicBoolean hit = new AtomicBoolean(false);
+
+        blobsMap.forEach((index,blob) -> {
+            for (Blob b : blob) {
+                if (b.contains(x,y)) hit.set(true);
+            }
+        });
+        return hit.get();
     }
 
+    Blob hitBlob;
     public Blob whichHit(double x, double y) {
-        for (Blob b : blobs) {
-            if (b.contains(x,y)) return b;
-        }
-        return null;
+        blobsMap.forEach((index,blob) -> {
+            for (Blob b : blob) {
+                if (b.contains(x,y)) hitBlob = b;
+            }
+        });
+        return hitBlob;
     }
 
     Integer selectionsNum = 1;
@@ -105,6 +137,10 @@ public class BlobModel {
         notifySubscribers();
         rubberBandArrayList.remove(band);
         return selections;
+    }
+
+    public HashMap<Integer, List<Blob>> getBlobsMap() {
+        return blobsMap;
     }
 
 }

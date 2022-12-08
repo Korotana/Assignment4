@@ -28,22 +28,40 @@ public class BlobView extends StackPane implements BlobModelListener, IModelList
 
     private void draw() {
         gc.clearRect(0,0,myCanvas.getWidth(),myCanvas.getHeight());
-        model.getBlobs().forEach(b -> {
-            if (b == iModel.getSelected()) {
-                gc.setFill(Color.TOMATO);
-            } else {
-                gc.setFill(Color.BEIGE);
-            }
-            if (iModel.getRubberBandSelections() != null){
+
+        model.getBlobsMap().forEach((index,blob) -> {
+
+            blob.forEach(b -> {
+                if (b == iModel.getSelected()) {
+                    gc.setFill(Color.TOMATO);
+                } else {
+                    gc.setFill(Color.BEIGE);
+                }
+
+                if (iModel.getRubberBandSelections() != null){
                 iModel.getRubberBandSelections().forEach((num, blobs) -> {
                     if (blobs.contains(b)) gc.setFill(Color.TOMATO);
                 });
             }
             gc.fillOval(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
             gc.setFill(Color.BLACK);
-            gc.fillText(Integer.toString(model.getBlobs().indexOf(b)),b.x-b.r + b.r,b.y-b.r + b.r);
+            gc.fillText(Integer.toString(b.index),b.x-b.r + b.r,b.y-b.r + b.r);
+
+            });
         });
 
+//        model.getBlobs().forEach(b -> {
+
+//            if (iModel.getRubberBandSelections() != null){
+//                iModel.getRubberBandSelections().forEach((num, blobs) -> {
+//                    if (blobs.contains(b)) gc.setFill(Color.TOMATO);
+//                });
+//            }
+//            gc.fillOval(b.x-b.r,b.y-b.r,b.r*2,b.r*2);
+//            gc.setFill(Color.BLACK);
+//            gc.fillText(Integer.toString(model.getBlobs().indexOf(b)),b.x-b.r + b.r,b.y-b.r + b.r);
+//        });
+//
         model.rubberBandArrayList.forEach(band -> {
             gc.setStroke(Color.GREEN);
             strokeRubberBand(band);
