@@ -156,7 +156,7 @@ public class BlobController {
     public void handleDeleteKeyPressed() {
         System.out.println("In Del");
         if (iModel.getSelected() != null) {
-            DeleteCommand dc = new DeleteCommand(model, iModel.getSelected(),iModel.getSelected().x, iModel.getSelected().y);
+            DeleteCommand dc = new DeleteCommand(model, iModel.getSelected(),iModel.getSelected().x, iModel.getSelected().y, null);
             dc.doIt();
             iModel.addToUndoStack(dc);
         }
@@ -194,6 +194,18 @@ public class BlobController {
 
     public void setXDown(boolean XDown) {
         isXDown = XDown;
+        if (isXDown && isCtrlDown) {
+            ArrayList<Blob> cut = new ArrayList<>();
+            if (iModel.getSelected() != null){
+                cut.add(iModel.getSelected());
+            }
+            iModel.copyToClipboard();
+            DeleteCommand dc = new DeleteCommand(model,null,0,0,cut);
+            dc.doIt();
+            iModel.addToUndoStack(dc);
+            System.out.println("CUT ITEMS");
+        }
+
     }
 
 

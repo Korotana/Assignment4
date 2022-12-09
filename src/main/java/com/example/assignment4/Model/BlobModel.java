@@ -157,4 +157,16 @@ public class BlobModel {
 
         }
     }
+
+    public void CutItems(ArrayList<Blob> cutItems) {
+        for (Blob b: cutItems) {
+            if (blobsMap.get(b.index).contains(b)){
+                if (blobsMap.get(b.index).size() == 1){
+                    blobsMap.remove(b.index);
+                }else {
+                    blobsMap.get(b.index).remove(b);
+                }
+            }
+        }
+    }
 }
