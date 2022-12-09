@@ -25,6 +25,8 @@ public class BlobController {
     boolean isCDown = false;
     boolean isVDown = false;
     boolean isXDown = false;
+    boolean isTDown = false;
+    boolean isEDown = false;
     public boolean isShiftDown = false;
 
     enum State {READY,PREPARE_CREATE, DRAGGING}
@@ -208,7 +210,19 @@ public class BlobController {
 
     }
 
+    public void setTDown(boolean TDown) {
+        isTDown = TDown;
+        if (isCtrlDown && isTDown){
+            iModel.setMode("trainer");
+        }
+    }
 
+    public void setEDown(boolean EDown) {
+        isEDown = EDown;
+        if (isEDown && isCtrlDown){
+            iModel.setMode("edit");
+        }
+    }
 
 }
 

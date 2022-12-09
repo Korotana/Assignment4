@@ -15,6 +15,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         MainUI uiRoot = new MainUI();
+//        uiRoot.iModel.addAppSubscriber(uiRoot);
         Scene scene = new Scene(uiRoot);
         stage.setTitle("Hello!");
         stage.setScene(scene);
@@ -27,6 +28,8 @@ public class HelloApplication extends Application {
             if (keyEvent.getCode() == KeyCode.C) uiRoot.controller.setCDown(true);
             if (keyEvent.getCode() == KeyCode.X) uiRoot.controller.setXDown(true);
             if (keyEvent.getCode() == KeyCode.V) uiRoot.controller.setVDown(true);
+            if (keyEvent.getCode() == KeyCode.T) uiRoot.controller.setTDown(true);
+            if (keyEvent.getCode() == KeyCode.E) uiRoot.controller.setEDown(true);
             if (zPressed && ctrlPressed) uiRoot.controller.handleUndo();
             if (rPressed && ctrlPressed) uiRoot.controller.handleRedo();
         });
@@ -38,6 +41,8 @@ public class HelloApplication extends Application {
             if (keyEvent.getCode() == KeyCode.C) uiRoot.controller.setCDown(false);
             if (keyEvent.getCode() == KeyCode.X) uiRoot.controller.setXDown(false);
             if (keyEvent.getCode() == KeyCode.V) uiRoot.controller.setVDown(false);
+            if (keyEvent.getCode() == KeyCode.T) uiRoot.controller.setTDown(false);
+            if (keyEvent.getCode() == KeyCode.E) uiRoot.controller.setEDown(false);
         });
         stage.show();
     }

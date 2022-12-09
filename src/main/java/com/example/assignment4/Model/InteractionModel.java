@@ -2,6 +2,7 @@ package com.example.assignment4.Model;
 
 import com.example.assignment4.Blob;
 import com.example.assignment4.Clipboard.TargetClipboard;
+import com.example.assignment4.Interface.AppModelListener;
 import com.example.assignment4.Interface.TargetCommand;
 import com.example.assignment4.Interface.IModelListener;
 
@@ -12,14 +13,17 @@ import java.util.Stack;
 
 public class InteractionModel {
     List<IModelListener> subscribers;
+    List<AppModelListener> appSubscribers;
     Stack<TargetCommand> undoStack, redoStack;
     Blob selected;
     TargetClipboard clipboard;
+    String mode;
 
     private HashMap<Integer, ArrayList<Blob>> rubberBandSelections;
 
     public InteractionModel() {
         subscribers = new ArrayList<>();
+        appSubscribers = new ArrayList<>();
         undoStack = new Stack<>();
         redoStack = new Stack<>();
         clipboard = new TargetClipboard();
@@ -29,9 +33,25 @@ public class InteractionModel {
         subscribers.add(sub);
     }
 
+    public void addAppSubscriber(AppModelListener sub) {appSubscribers.add(sub);}
+
     private void notifySubscribers() {
         subscribers.forEach(s -> s.iModelChanged());
     }
+
+    private void notifyAppSubscribers(){
+        appSubscribers.forEach(sub -> {sub.viewChanged(mode);});
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+        notifyAppSubscribers();
+    }
+
 
     public Blob getSelected() {
         return selected;

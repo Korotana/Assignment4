@@ -147,6 +147,7 @@ public class BlobModel {
     public void pasteItems(ArrayList<Blob> paste) {
 
         for (Blob blob: paste) {
+            System.out.println(blob.index);
             if (blobsMap.containsKey(blob.index))
             {
                 blobsMap.get(blob.index).add(blob);
@@ -154,7 +155,6 @@ public class BlobModel {
             }
 
             else this.addBlob(blob);
-
         }
     }
 

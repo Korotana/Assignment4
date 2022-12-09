@@ -31,7 +31,11 @@ public class DeleteCommand implements TargetCommand {
     }
 
     public void undo() {
-        model.addBlob(myBlob);
+//        System.out.println(myBlob.index);
+        if (this.cutItems!= null){
+            model.pasteItems(cutItems);
+        }
+        else model.addBlob(myBlob);
     }
 
     public String toString() {
