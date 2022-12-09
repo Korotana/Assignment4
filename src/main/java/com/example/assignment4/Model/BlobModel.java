@@ -34,6 +34,7 @@ public class BlobModel {
     public Blob createBlob(double x, double y){
         Blob b = new Blob(x,y);
 //        blobs.add(b);
+
         ArrayList<Blob> blob = new ArrayList<Blob>();
         blob.add(b);
         if (!blobsMap.isEmpty()){
@@ -143,4 +144,17 @@ public class BlobModel {
         return blobsMap;
     }
 
+    public void pasteItems(ArrayList<Blob> paste) {
+
+        for (Blob blob: paste) {
+            if (blobsMap.containsKey(blob.index))
+            {
+                blobsMap.get(blob.index).add(blob);
+                notifySubscribers();
+            }
+
+            else this.addBlob(blob);
+
+        }
+    }
 }

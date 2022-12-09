@@ -1,6 +1,7 @@
 package com.example.assignment4.Model;
 
 import com.example.assignment4.Blob;
+import com.example.assignment4.Clipboard.TargetClipboard;
 import com.example.assignment4.Interface.TargetCommand;
 import com.example.assignment4.Interface.IModelListener;
 
@@ -13,6 +14,7 @@ public class InteractionModel {
     List<IModelListener> subscribers;
     Stack<TargetCommand> undoStack, redoStack;
     Blob selected;
+    TargetClipboard clipboard;
 
     private HashMap<Integer, ArrayList<Blob>> rubberBandSelections;
 
@@ -20,6 +22,7 @@ public class InteractionModel {
         subscribers = new ArrayList<>();
         undoStack = new Stack<>();
         redoStack = new Stack<>();
+        clipboard = new TargetClipboard();
     }
 
     public void addSubscriber(IModelListener sub) {
@@ -78,6 +81,17 @@ public class InteractionModel {
             tc.doIt();
             undoStack.push(tc);
         }
+    }
+
+    public void copyToClipboard() {
+        ArrayList<Blob> temp = new ArrayList<>();
+        temp.add(selected);
+        clipboard.copy(temp);
+
+    }
+
+    public ArrayList<Blob> getClipBoard() {
+        return this.clipboard.getBlobs();
     }
 
 

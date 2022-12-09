@@ -9,6 +9,7 @@ import com.example.assignment4.Model.BlobModel;
 import com.example.assignment4.Model.InteractionModel;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
 
 
 public class BlobController {
@@ -20,6 +21,10 @@ public class BlobController {
     ResizeCommand rc;
     MoveCommand mc;
 
+    Boolean isCtrlDown = false;
+    boolean isCDown = false;
+    boolean isVDown = false;
+    boolean isXDown = false;
     public boolean isShiftDown = false;
 
     enum State {READY,PREPARE_CREATE, DRAGGING}
@@ -95,7 +100,7 @@ public class BlobController {
         switch (currentState) {
             case PREPARE_CREATE -> {
                 if (isShiftDown) {
-                    CreateCommand cc = new CreateCommand(model,event.getX(),event.getY());
+                    CreateCommand cc = new CreateCommand(model,event.getX(),event.getY(), null);
                     cc.doIt();
                     iModel.addToUndoStack(cc);
                     iModel.setSelected(model.whichHit(event.getX(),event.getY()));
@@ -163,6 +168,34 @@ public class BlobController {
     public void handleUndo() {iModel.handleUndo();}
 
     public void handleRedo() {iModel.handleRedo();}
+
+    public void setCtrlDown(Boolean ctrlDown) {
+        isCtrlDown = ctrlDown;
+    }
+
+    public void setCDown(boolean CDown) {
+        isCDown = CDown;
+        if (isCDown && isCtrlDown) {
+            iModel.copyToClipboard();
+            System.out.println("COPIED ITEMS");
+        }
+    }
+
+    public void setVDown(boolean VDown) {
+        isVDown = VDown;
+        if (isVDown && isCtrlDown) {
+            ArrayList<Blob> pasteItems = iModel.getClipBoard();
+            CreateCommand cc = new CreateCommand(model,0,0,pasteItems);
+            cc.doIt();
+            iModel.addToUndoStack(cc);
+            if (pasteItems.size() == 1) iModel.setSelected(pasteItems.get(0));
+        }
+    }
+
+    public void setXDown(boolean XDown) {
+        isXDown = XDown;
+    }
+
 
 
 }

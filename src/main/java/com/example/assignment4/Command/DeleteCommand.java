@@ -25,7 +25,7 @@ public class DeleteCommand implements TargetCommand {
     }
 
     public void undo() {
-        model.createBlob(blobX, blobY);
+        model.addBlob(myBlob);
     }
 
     public String toString() {

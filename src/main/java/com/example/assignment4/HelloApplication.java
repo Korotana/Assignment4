@@ -22,16 +22,22 @@ public class HelloApplication extends Application {
             if (keyEvent.getCode() == KeyCode.SHIFT) uiRoot.controller.isShiftDown = true;
             if (keyEvent.getCode() == KeyCode.DELETE) uiRoot.controller.handleDeleteKeyPressed();
             if (keyEvent.getCode() == KeyCode.Z) zPressed = true;
-            if (keyEvent.getCode() == KeyCode.CONTROL) ctrlPressed = true;
+            if (keyEvent.getCode() == KeyCode.CONTROL) {ctrlPressed = true; uiRoot.controller.setCtrlDown(true);}
             if (keyEvent.getCode() == KeyCode.R) rPressed = true;
+            if (keyEvent.getCode() == KeyCode.C) uiRoot.controller.setCDown(true);
+            if (keyEvent.getCode() == KeyCode.X) uiRoot.controller.setXDown(true);
+            if (keyEvent.getCode() == KeyCode.V) uiRoot.controller.setVDown(true);
             if (zPressed && ctrlPressed) uiRoot.controller.handleUndo();
             if (rPressed && ctrlPressed) uiRoot.controller.handleRedo();
         });
         scene.setOnKeyReleased(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SHIFT) uiRoot.controller.isShiftDown = false;
             if (keyEvent.getCode() == KeyCode.Z) zPressed = false;
-            if (keyEvent.getCode() == KeyCode.CONTROL) ctrlPressed = false;
+            if (keyEvent.getCode() == KeyCode.CONTROL) {ctrlPressed = false; uiRoot.controller.setCtrlDown(false);}
             if (keyEvent.getCode() == KeyCode.R) rPressed = false;
+            if (keyEvent.getCode() == KeyCode.C) uiRoot.controller.setCDown(false);
+            if (keyEvent.getCode() == KeyCode.X) uiRoot.controller.setXDown(false);
+            if (keyEvent.getCode() == KeyCode.V) uiRoot.controller.setVDown(false);
         });
         stage.show();
     }
