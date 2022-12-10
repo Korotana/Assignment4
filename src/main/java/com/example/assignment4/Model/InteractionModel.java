@@ -2,6 +2,7 @@ package com.example.assignment4.Model;
 
 import com.example.assignment4.Blob;
 import com.example.assignment4.Clipboard.TargetClipboard;
+import com.example.assignment4.Command.CreateCommand;
 import com.example.assignment4.Interface.AppModelListener;
 import com.example.assignment4.Interface.TargetCommand;
 import com.example.assignment4.Interface.IModelListener;
@@ -15,6 +16,9 @@ public class InteractionModel {
     List<IModelListener> subscribers;
     List<AppModelListener> appSubscribers;
     Stack<TargetCommand> undoStack, redoStack;
+
+    ArrayList<Blob> createOrder;
+
     Blob selected;
     TargetClipboard clipboard;
     String mode;
@@ -112,6 +116,22 @@ public class InteractionModel {
 
     public ArrayList<Blob> getClipBoard() {
         return this.clipboard.getBlobs();
+    }
+
+    public ArrayList<Blob> getCreateOrder() {
+        return createOrder;
+    }
+
+    public void updateCreateOrder()
+    {
+        this.undoStack.forEach((targetCommand ->
+        {
+            System.out.println(targetCommand instanceof CreateCommand);
+            if (targetCommand instanceof CreateCommand){
+                this.createOrder.add(((CreateCommand) targetCommand).myBlob);
+            }
+        }));
+
     }
 
 

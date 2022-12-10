@@ -89,7 +89,6 @@ public class BlobView extends StackPane implements BlobModelListener, IModelList
     @Override
     public void modelChanged() {
         draw();
-
     }
 
     @Override

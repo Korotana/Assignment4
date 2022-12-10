@@ -4,4 +4,6 @@ public interface AppModelListener {
 
     void viewChanged(String mode);
 
+
+
 }

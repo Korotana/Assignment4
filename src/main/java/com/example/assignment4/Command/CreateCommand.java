@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CreateCommand implements TargetCommand {
-    Blob myBlob;
+    public Blob myBlob;
     BlobModel model;
     double blobX, blobY;
     DecimalFormat df;
