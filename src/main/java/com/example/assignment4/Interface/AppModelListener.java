@@ -2,8 +2,6 @@ package com.example.assignment4.Interface;
 
 public interface AppModelListener {
 
-    void viewChanged(String mode);
-
-
+    void viewChanged(String view);
 
 }

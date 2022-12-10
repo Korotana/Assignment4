@@ -22,12 +22,8 @@ public class TrainerController {
     }
 
     public boolean handleReleased(MouseEvent mouseEvent, Integer trialNum) {
-
         Blob hit = model.whichHit(mouseEvent.getX(),mouseEvent.getY());
-        if (trialNum == 0)
-            if (hit == imodel.getCreateOrder().get(trialNum)){
-
-            }
-
+//        imodel.updateCreateOrder();
+        return imodel.checkTarget(hit,trialNum);
     }
 }

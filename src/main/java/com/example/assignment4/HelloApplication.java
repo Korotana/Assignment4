@@ -28,7 +28,7 @@ public class HelloApplication extends Application {
             if (keyEvent.getCode() == KeyCode.C) uiRoot.controller.setCDown(true);
             if (keyEvent.getCode() == KeyCode.X) uiRoot.controller.setXDown(true);
             if (keyEvent.getCode() == KeyCode.V) uiRoot.controller.setVDown(true);
-            if (keyEvent.getCode() == KeyCode.T) uiRoot.controller.setTDown(true);
+            if (keyEvent.getCode() == KeyCode.Y) uiRoot.controller.setTDown(true);
             if (keyEvent.getCode() == KeyCode.E) uiRoot.controller.setEDown(true);
             if (zPressed && ctrlPressed) uiRoot.controller.handleUndo();
             if (rPressed && ctrlPressed) uiRoot.controller.handleRedo();

@@ -11,17 +11,22 @@ import com.example.assignment4.View.TrainerView;
 import javafx.scene.layout.StackPane;
 
 public class MainUI extends StackPane implements AppModelListener {
-    public BlobController controller = new BlobController();;
-    TrainerController trainerController = new TrainerController();
-    TrainerView trainerView = new TrainerView();
-    ReportView reportView = new ReportView();
-    BlobView blobView = new BlobView();
+    public BlobController controller;
+    TrainerController trainerController;
+    TrainerView trainerView;
+    ReportView reportView;
+    BlobView blobView;
+    InteractionModel iModel;
 
 
     public MainUI() {
 
         BlobModel model = new BlobModel();
-        InteractionModel iModel = new InteractionModel();
+        controller = new BlobController();
+        trainerController = new TrainerController();
+        trainerView = new TrainerView();
+        blobView = new BlobView();
+        iModel = new InteractionModel();
 
         controller.setModel(model);
         blobView.setModel(model);
@@ -30,6 +35,7 @@ public class MainUI extends StackPane implements AppModelListener {
         model.addSubscriber(blobView);
         iModel.addSubscriber(blobView);
         iModel.addAppSubscriber(this);
+        iModel.addAppSubscriber(trainerView);
 
         trainerController.setModel(model);
         trainerController.setIModel(iModel);
@@ -39,20 +45,24 @@ public class MainUI extends StackPane implements AppModelListener {
         trainerView.setController(trainerController);
         blobView.setController(controller);
 
+        reportView = new ReportView();
+        reportView.setIModel(iModel);
+
         this.getChildren().add(blobView);
     }
 
     @Override
-    public void viewChanged(String mode) {
-        System.out.println("View Changed");
-        if (mode.equals("trainer")) {
+    public void viewChanged(String view) {
+        System.out.println(view);
+        if (iModel.getMode().equals("trainer")) {
             this.getChildren().clear();
             this.getChildren().addAll(trainerView);
-        }else if (mode.equals("edit")){
+        }else if (iModel.getMode().equals("edit")){
             this.getChildren().clear();
             this.getChildren().addAll(blobView);
         }else {
             this.getChildren().clear();
+            reportView.fillChart();
             this.getChildren().addAll(reportView);
         }
 

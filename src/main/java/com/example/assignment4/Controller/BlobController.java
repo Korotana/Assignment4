@@ -213,7 +213,12 @@ public class BlobController {
     public void setTDown(boolean TDown) {
         isTDown = TDown;
         if (isCtrlDown && isTDown){
-            iModel.setMode("trainer");
+            System.out.println("intdown");
+            if (!iModel.getMode().equals("trainer")){
+                iModel.setMode("trainer");
+                iModel.updateCreateOrder();
+                iModel.checkTarget(model.getBlobsMap().entrySet().iterator().next().getValue().get(0),0);
+                }
         }
     }
 

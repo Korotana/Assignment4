@@ -6,6 +6,7 @@ import com.example.assignment4.Command.CreateCommand;
 import com.example.assignment4.Interface.AppModelListener;
 import com.example.assignment4.Interface.TargetCommand;
 import com.example.assignment4.Interface.IModelListener;
+import com.example.assignment4.Trial;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,9 +20,12 @@ public class InteractionModel {
 
     ArrayList<Blob> createOrder;
 
+    ArrayList<Trial> trials;
+
     Blob selected;
     TargetClipboard clipboard;
-    String mode;
+    String mode = "edit";
+    String prevMode = "";
 
     private HashMap<Integer, ArrayList<Blob>> rubberBandSelections;
 
@@ -31,20 +35,26 @@ public class InteractionModel {
         undoStack = new Stack<>();
         redoStack = new Stack<>();
         clipboard = new TargetClipboard();
+        createOrder = new ArrayList<>();
+        trials = new ArrayList<>();
     }
 
     public void addSubscriber(IModelListener sub) {
         subscribers.add(sub);
     }
 
-    public void addAppSubscriber(AppModelListener sub) {appSubscribers.add(sub);}
+    public void addAppSubscriber(AppModelListener sub) {
+        appSubscribers.add(sub);
+    }
 
     private void notifySubscribers() {
         subscribers.forEach(s -> s.iModelChanged());
     }
 
-    private void notifyAppSubscribers(){
-        appSubscribers.forEach(sub -> {sub.viewChanged(mode);});
+    private void notifyAppSubscribers() {
+        appSubscribers.forEach(sub -> {
+            sub.viewChanged(prevMode);
+        });
     }
 
     public String getMode() {
@@ -53,6 +63,7 @@ public class InteractionModel {
 
     public void setMode(String mode) {
         this.mode = mode;
+        prevMode = "viewchanged";
         notifyAppSubscribers();
     }
 
@@ -122,17 +133,51 @@ public class InteractionModel {
         return createOrder;
     }
 
-    public void updateCreateOrder()
-    {
+    public void updateCreateOrder() {
         this.undoStack.forEach((targetCommand ->
         {
-            System.out.println(targetCommand instanceof CreateCommand);
-            if (targetCommand instanceof CreateCommand){
+            if (targetCommand instanceof CreateCommand) {
                 this.createOrder.add(((CreateCommand) targetCommand).myBlob);
             }
         }));
 
+        for (int i = 0; i < createOrder.size(); i++) {
+            trials.add(new Trial());
+        }
     }
+
+    public ArrayList<Trial> getTrials() {
+        return trials;
+    }
+
+    public boolean checkTarget(Blob hit, Integer trialNum) {
+
+        if (trialNum == 0) {
+                this.trials.get(trialNum).startTimer();
+                this.trials.get(trialNum).setBlob(hit);
+                prevMode = "draw";
+                notifyAppSubscribers();
+                return true;
+        } else {
+            if (trialNum == this.trials.size()){
+//                System.out.println("Lets go to reportView");
+                mode = "report";
+                notifyAppSubscribers();
+            }
+            else if (hit == this.createOrder.get(trialNum-1)) {
+                this.trials.get(trialNum - 1).endTimer();
+                this.trials.get(trialNum).startTimer();
+                this.trials.get(trialNum).setBlob(this.createOrder.get(trialNum));
+                this.trials.get(trialNum-1).calcDistance(this.trials.get(trialNum).getBlob());
+                this.trials.get(trialNum-1).calcID();
+                prevMode = "draw";
+                notifyAppSubscribers();
+                return true;
+            }
+        }
+        return false;
+    }
+}
 
 
 //    private void notifyStackSubscribers() {
@@ -149,4 +194,4 @@ public class InteractionModel {
 //        stackSubscribers.add(aSub);
 //    }
 
-}
+

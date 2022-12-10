@@ -14,7 +14,7 @@ public class TrainerView extends StackPane implements AppModelListener {
 
     BlobModel model;
     InteractionModel imodel;
-    Integer trialNum;
+    Integer trialNum = 0;
     Blob current;
 
     GraphicsContext gc;
@@ -46,16 +46,23 @@ public class TrainerView extends StackPane implements AppModelListener {
     }
 
     @Override
-    public void viewChanged(String mode) {
-        if (mode.equals("trainer")){
-            trialNum = 0;
+    public void viewChanged(String draw) {
+        if (imodel.getMode().equals("trainer")){
+            if (draw.equals("draw")){
+                System.out.println(trialNum);
+                draw(imodel.getTrials().get(trialNum).getBlob());
+                trialNum++;
+            }else if (draw.equals("viewchanged")){
+                trialNum = 0;
+//                draw(imodel.getTrials().get(trialNum).getBlob());
+            }
         }
     }
 
     public void setController(TrainerController trainerController) {
         myCanvas.setOnMouseReleased(mouseEvent -> {
             if (trainerController.handleReleased(mouseEvent,trialNum)){
-                trialNum++;
+//                trialNum++;
             }
         });
     }
