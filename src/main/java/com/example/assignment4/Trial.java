@@ -32,7 +32,7 @@ public class Trial {
     }
 
     public void calcID(){
-        System.out.println(Math.log(2));
+        System.out.println("log ---"+Math.log(2));
         double log2 = Math.log(2);
         indexDiff = Math.log(distance/ blob.r) / log2;
     }

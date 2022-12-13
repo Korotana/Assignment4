@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.TimeoutException;
 
 public class InteractionModel {
     List<IModelListener> subscribers;
@@ -120,9 +121,16 @@ public class InteractionModel {
 
     public void copyToClipboard() {
         ArrayList<Blob> temp = new ArrayList<>();
-        temp.add(selected);
+        if (selected!=null) temp.add(selected);
+        if (rubberBandSelections != null) {
+            rubberBandSelections.forEach((integer, blobs) -> {
+                blobs.forEach(blob -> temp.add(blob));
+            });
+        }else {
+            System.out.println("NOTHING SELECTED TO COPY");
+        }
         clipboard.copy(temp);
-
+        System.out.println("COPIED " + temp.size() + " ITEMS");
     }
 
     public ArrayList<Blob> getClipBoard() {

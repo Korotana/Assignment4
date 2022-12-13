@@ -22,7 +22,6 @@ public class TargetClipboard {
             copyBlob.r = blob.r;
             copyBlob.index = blob.index;
             blobs.add(copyBlob);});
-
     }
 
     public ArrayList<Blob> getBlobs() {

@@ -36,6 +36,8 @@ public class ReportView extends StackPane {
 
     public void fillChart(){
         for (Trial t: imodel.getTrials()) {
+            System.out.println("end    "+t.getEndTime());
+            System.out.println("id    "+ t.getIndexDiff());
             series2.getData().add(new XYChart.Data(t.getEndTime(),t.getIndexDiff()));
         }
     }

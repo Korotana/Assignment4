@@ -57,8 +57,7 @@ public class BlobModel {
             blob.remove(b);
             if (blob.size() == 0) temp.set(0);
         } );
-//        blobsMap
-//        blobsMap.remove(temp.get());
+
         notifySubscribers();
     }
 
@@ -74,16 +73,10 @@ public class BlobModel {
         notifySubscribers();
     }
 
-//    public void deleteBlob(Blob b){
-//        blobs.remove(b);
-//        notifySubscribers();
-//    }
-
-    public void deleteMultipleBlob(HashMap<Integer, ArrayList<Blob>> rubberBandSelections) {
-        rubberBandSelections.forEach((num, blobs) -> {
-            this.blobs.removeAll(blobs);
+    public void deleteMultipleBlob(ArrayList<Blob> rubberBandSelections) {
+        rubberBandSelections.forEach(blob -> {
+            deleteBlob(blob);
         });
-        notifySubscribers();
     }
 
     public void addSubscriber(BlobView sub) {
@@ -126,11 +119,12 @@ public class BlobModel {
         rubberBandArrayList.add(band);
         if (selectionComplete){
             ArrayList<Blob> selectionList = new ArrayList<>();
-            blobs.forEach(b -> {
-                if (band.checkHit(b.x,b.y)){
-//                    System.out.println("hbj");
-                    selectionList.add(b);
-                }
+            blobsMap.forEach((index,blobs) -> {
+                blobs.forEach(b -> {
+                    if (band.checkAllHit(b.x, b.y,b.r)) {
+                        selectionList.add(b);
+                    }
+                });
             });
             if (selectionList.size() > 0) selections.put(selectionsNum,selectionList);selectionsNum+=1;
             System.out.println(selections);
@@ -168,5 +162,18 @@ public class BlobModel {
                 }
             }
         }
+    }
+
+    public void moveMultiBlobs(ArrayList<Blob> collection, double dx, double dy) {
+
+        collection.forEach(blob -> {
+            moveBlob(blob,dx,dy);
+        });
+    }
+
+    public void resizeMultiBlobs(ArrayList<Blob> blobs, double dr) {
+        blobs.forEach(blob -> {
+            resizeBlob(blob,dr);
+        });
     }
 }

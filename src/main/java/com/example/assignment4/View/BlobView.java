@@ -40,7 +40,15 @@ public class BlobView extends StackPane implements BlobModelListener, IModelList
 
                 if (iModel.getRubberBandSelections() != null){
                 iModel.getRubberBandSelections().forEach((num, blobs) -> {
-                    if (blobs.contains(b)) gc.setFill(Color.TOMATO);
+                    if (blobs.contains(b)) {
+                        gc.setFill(Color.TOMATO);
+                    }else {
+                        blobs.forEach(rubberBlob -> {
+                            if (rubberBlob.index == b.index && iModel.getRubberBandSelections().containsValue(b)) {
+                                gc.setFill(Color.TOMATO);
+                            }
+                        });
+                    }
                 });
             }
             gc.fillOval(b.x-b.r,b.y-b.r,b.r*2,b.r*2);

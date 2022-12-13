@@ -31,6 +31,16 @@ public class RubberBand {
     }
 
 
+    public boolean checkAllHit(double x, double y, double r) {
+        boolean hit = false;
+        for (int i = 0; i < 361; i++) {
+            hit = this.checkHit(r*Math.cos(i) + x,r*Math.sin(i) + y);
+            if (hit){
+                return hit;
+            }
+        }
+        return hit;
+    }
 }
 
 

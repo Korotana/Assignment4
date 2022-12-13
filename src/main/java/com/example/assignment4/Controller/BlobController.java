@@ -10,6 +10,8 @@ import com.example.assignment4.Model.InteractionModel;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class BlobController {
@@ -48,7 +50,8 @@ public class BlobController {
             case READY -> {
                 if (model.hitBlob(event.getX(),event.getY())) {
                     Blob b = model.whichHit(event.getX(),event.getY());
-                    iModel.setSelected(b);
+                    if (iModel.getRubberBandSelections() != null) {}
+                    else{iModel.setSelected(b);}
                     prevX = event.getX();
                     prevY = event.getY();
                     dragStartX = event.getX();
@@ -74,26 +77,47 @@ public class BlobController {
                 model.createRubberBand(event.getX(), event.getY(), false);
             }
             case DRAGGING -> {
-//                dX = event.getX() - prevX;
-//                dY = event.getY() - prevY;
-//                prevX = event.getX();
-//                prevY = event.getY();
 
-                if (isShiftDown){
-                    model.resizeBlob(iModel.getSelected(),dX);
-                    rc = new ResizeCommand(model,iModel.getSelected(),event.getX());
-                    if (iModel.getSelected().r > 5.1){
-                        dR = event.getX()-dragStartX;
+                if (isShiftDown) {
+
+                    if (iModel.getRubberBandSelections() != null) {
+                        AtomicReference<ArrayList<Blob>> temp = new AtomicReference<>(new ArrayList<>());
+                        iModel.getRubberBandSelections().forEach((integer, blobs) -> temp.set(blobs));
+                        rc = new ResizeCommand(model, iModel.getSelected(), event.getX(),temp.get());
+                        model.resizeMultiBlobs(temp.get(), dX);
+                        if (temp.get().get(0).r > 5.1){
+                            dR = event.getX() - dragStartX;}}
+
+                    else {
+                        model.resizeBlob(iModel.getSelected(), dX);
+                        rc = new ResizeCommand(model, iModel.getSelected(), event.getX(), null);
+                        if (iModel.getSelected().r > 5.1) {
+                        dR = event.getX() - dragStartX;}
                     }
+
                     dragEndResize = event.getX();
-                    dragEndResizeY = event.getY();
-                }else {
-                    model.moveBlob(iModel.getSelected(), dX, dY);
-                    mc = new MoveCommand(model,iModel.getSelected(), event.getX(), event.getY());
+                    dragEndResizeY = event.getY();}
+
+                else {
+
+                    if (iModel.getSelected() != null) model.moveBlob(iModel.getSelected(), dX, dY);
+
+                    if (iModel.getRubberBandSelections() != null) {
+                        AtomicReference<ArrayList<Blob>> temp = new AtomicReference<>(new ArrayList<>());
+                        iModel.getRubberBandSelections().forEach((integer, blobs) -> temp.set(blobs));
+                        model.moveMultiBlobs(temp.get(),dX,dY);
+//                        MoveCommand mc = new MoveCommand(model, iModel.getSelected(), event.getX(), t, temp.get());
+//                        iModel.addToUndoStack(mc);
+                    }
+
+                    mc = new MoveCommand(model, iModel.getSelected(), event.getX(), event.getY(),null);
                     dragEndMoveX = event.getX();
                     dragEndMoveY = event.getY();
+
                 }
+
                 dragEndResizeToMove = event.getX();
+
             }
         }
     }
@@ -112,21 +136,19 @@ public class BlobController {
                 }
                 currentState = State.READY;
             }
+
+
             case DRAGGING -> {
-//                iModel.unselect();
                 double totalDX = event.getX() - dragStartX;
                 double totalDY = event.getY() - dragStartY;
                 if (rc != null) {
-//                    System.out.println(dragEndMoveX);
-//                    System.out.println(dragEndResizeToMove);
-//                    System.out.println(dragEndResize);
-//                    System.out.println("==================");
+
                     if (dragEndResize == dragEndResizeToMove && dR != 0) {
                         rc.setDr(dR);
                         iModel.addToUndoStack(rc);
                         rc = null;
-                        dR = 0;
-                    }
+                        dR = 0;}
+
                     else if (dragEndResize != dragEndResizeToMove && Math.abs(dragEndResizeToMove - event.getX()) < 1.1){
                             //When doing resize and shift is released to go into move state
                             System.out.println("DID RESIZE TO MOVE SIMULTANEOUSLY");
@@ -134,35 +156,46 @@ public class BlobController {
                             iModel.addToUndoStack(rc);
                             totalDX = event.getX() - dragEndResize;
                             totalDY = event.getY() - dragEndResizeY;
-                            MoveCommand mc = new MoveCommand(model, iModel.getSelected(), totalDX, totalDY);
-                            iModel.addToUndoStack(mc);
-                    }else if (dragEndMoveX != dragEndResizeToMove && Math.abs(dragEndResizeToMove - event.getX()) < 1.1){
+                            MoveCommand mc = new MoveCommand(model, iModel.getSelected(), totalDX, totalDY,null);
+                            iModel.addToUndoStack(mc);}
+
+                    else if (dragEndMoveX != dragEndResizeToMove && Math.abs(dragEndResizeToMove - event.getX()) < 1.1){
                         System.out.println("DID MOVE TO RESIZE SIMULTANEOUSLY");
                         totalDX = dragEndMoveX - dragStartX;
                         totalDY = dragEndMoveY - dragStartY;
-                        MoveCommand mc = new MoveCommand(model, iModel.getSelected(), totalDX, totalDY);
+                        MoveCommand mc = new MoveCommand(model, iModel.getSelected(), totalDX, totalDY,null);
                         iModel.addToUndoStack(mc);
                         rc.setDr(dragEndResize-dragEndMoveX);
                         iModel.addToUndoStack(rc);
                     }
 
                 } else {
-                        MoveCommand mc = new MoveCommand(model, iModel.getSelected(), totalDX, totalDY);
-                        iModel.addToUndoStack(mc);
-                }
+                        if (iModel.getRubberBandSelections() != null){
+                            AtomicReference<ArrayList<Blob>> temp = new AtomicReference<>(new ArrayList<>());
+                            iModel.getRubberBandSelections().forEach((integer, blobs) -> temp.set(blobs));
+                            MoveCommand mc = new MoveCommand(model, iModel.getSelected(), totalDX, totalDY, temp.get());
+                            iModel.addToUndoStack(mc);
+                        }
+                        else {
+                            MoveCommand mc = new MoveCommand(model, iModel.getSelected(), totalDX, totalDY,null);
+                            iModel.addToUndoStack(mc);
+                        }}
                 currentState = State.READY;
             }
         }
     }
 
     public void handleDeleteKeyPressed() {
-        System.out.println("In Del");
         if (iModel.getSelected() != null) {
             DeleteCommand dc = new DeleteCommand(model, iModel.getSelected(),iModel.getSelected().x, iModel.getSelected().y, null);
             dc.doIt();
             iModel.addToUndoStack(dc);
         }
-//        if (iModel.getRubberBandSelections() != null) model.deleteMultipleBlob(iModel.getRubberBandSelections());
+
+        if (iModel.getRubberBandSelections() != null) {
+            AtomicReference<ArrayList<Blob>> temp = new AtomicReference<>(new ArrayList<>());
+            iModel.getRubberBandSelections().forEach((integer, blobs) -> temp.set(blobs));
+            model.deleteMultipleBlob(temp.get());}
         else System.out.println("NOTHING SELECTED TO DELETE");
 
     }
@@ -179,7 +212,6 @@ public class BlobController {
         isCDown = CDown;
         if (isCDown && isCtrlDown) {
             iModel.copyToClipboard();
-            System.out.println("COPIED ITEMS");
         }
     }
 
@@ -191,6 +223,12 @@ public class BlobController {
             cc.doIt();
             iModel.addToUndoStack(cc);
             if (pasteItems.size() == 1) iModel.setSelected(pasteItems.get(0));
+            if (pasteItems.size() == 1) iModel.setSelected(pasteItems.get(0));
+            else if (pasteItems.size() > 1) {
+                HashMap<Integer,ArrayList<Blob>> selectionsPaste = new HashMap<>();
+                selectionsPaste.put(0,pasteItems);
+                iModel.setRubberBandSelections(selectionsPaste);
+            }
         }
     }
 
