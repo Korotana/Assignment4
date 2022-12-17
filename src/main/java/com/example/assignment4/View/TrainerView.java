@@ -49,7 +49,6 @@ public class TrainerView extends StackPane implements AppModelListener {
     public void viewChanged(String draw) {
         if (imodel.getMode().equals("trainer")){
             if (draw.equals("draw")){
-                System.out.println(trialNum);
                 draw(imodel.getTrials().get(trialNum).getBlob());
                 trialNum++;
             }else if (draw.equals("viewchanged")){

@@ -30,7 +30,10 @@ public class ResizeCommand implements TargetCommand {
     }
 
     public void undo() {
-        model.resizeBlob(myBlob, dr * -1);
+        if (blobs != null){
+            model.resizeMultiBlobs(blobs,dr*-1);
+        }else {
+            model.resizeBlob(myBlob, dr*-1);}
     }
 
     public double getDr() {

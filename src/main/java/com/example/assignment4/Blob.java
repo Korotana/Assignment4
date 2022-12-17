@@ -4,6 +4,7 @@ public class Blob {
     public double x,y;
     public double r;
     public int index = 1;
+    public int create_Id = 1;
 
     public Blob(double nx, double ny) {
         x = nx;

@@ -12,6 +12,8 @@ public class CreateCommand implements TargetCommand {
     BlobModel model;
     double blobX, blobY;
     DecimalFormat df;
+
+
     ArrayList<Blob> paste;
 
     public CreateCommand(BlobModel newModel, double newX, double newY, ArrayList<Blob> paste) {
@@ -37,7 +39,13 @@ public class CreateCommand implements TargetCommand {
     }
 
     public void undo() {
-        model.deleteBlob(myBlob);
+        if (paste != null) {model.cutItems(paste);}
+        else model.deleteBlob(myBlob);
+    }
+
+
+    public ArrayList<Blob> getPaste() {
+        return paste;
     }
 
     public String toString() {

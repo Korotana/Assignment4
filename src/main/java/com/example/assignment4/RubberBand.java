@@ -49,12 +49,3 @@ public class RubberBand {
 
 
 
-
-//        System.out.println("x - = "+x);
-//        System.out.println("y - = "+y);
-//        System.out.println("l - = "+left);
-//        System.out.println("tp -= "+ top);
-//        double p =left+width;
-//        double t = top+height;
-//        System.out.println("lw - = "+ p);
-//        System.out.println("th -= "+ t);

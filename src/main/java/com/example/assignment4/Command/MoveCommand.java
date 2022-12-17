@@ -32,7 +32,10 @@ public class MoveCommand implements TargetCommand {
     }
 
     public void undo() {
-        model.moveBlob(myBlob, dx * -1, dy * -1);
+        if (collection != null){
+            model.moveMultiBlobs(collection,dx * -1, dy * -1);
+        }else {
+        model.moveBlob(myBlob, dx * -1, dy * -1);}
     }
 
     public String toString() {

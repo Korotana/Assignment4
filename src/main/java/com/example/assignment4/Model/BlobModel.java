@@ -11,20 +11,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class BlobModel {
     private final List<BlobModelListener> subscribers;
-    private final List<Blob> blobs;
     private final LinkedHashMap<Integer,List<Blob>> blobsMap;
     public ArrayList<RubberBand> rubberBandArrayList;
     public double rubberTop, rubberLeft, rubberWidth, rubberHeight;
 
     public BlobModel() {
         subscribers = new ArrayList<>();
-        blobs = new ArrayList<>();
         blobsMap = new LinkedHashMap<>();
         rubberBandArrayList = new ArrayList<>();
     }
 
     public void addBlob(Blob b) {
-//        blobs.add(b);
         ArrayList<Blob> blob = new ArrayList<Blob>();
         blob.add(b);
         blobsMap.put(b.index, blob);
@@ -33,7 +30,6 @@ public class BlobModel {
 
     public Blob createBlob(double x, double y){
         Blob b = new Blob(x,y);
-//        blobs.add(b);
 
         ArrayList<Blob> blob = new ArrayList<Blob>();
         blob.add(b);
@@ -87,10 +83,6 @@ public class BlobModel {
         subscribers.forEach(s -> s.modelChanged());
     }
 
-    public List<Blob> getBlobs() {
-        return blobs;
-    }
-
     public boolean hitBlob(double x, double y) {
         AtomicBoolean hit = new AtomicBoolean(false);
 
@@ -127,7 +119,6 @@ public class BlobModel {
                 });
             });
             if (selectionList.size() > 0) selections.put(selectionsNum,selectionList);selectionsNum+=1;
-            System.out.println(selections);
         }
         notifySubscribers();
         rubberBandArrayList.remove(band);
@@ -141,7 +132,6 @@ public class BlobModel {
     public void pasteItems(ArrayList<Blob> paste) {
 
         for (Blob blob: paste) {
-            System.out.println(blob.index);
             if (blobsMap.containsKey(blob.index))
             {
                 blobsMap.get(blob.index).add(blob);
@@ -152,7 +142,7 @@ public class BlobModel {
         }
     }
 
-    public void CutItems(ArrayList<Blob> cutItems) {
+    public void cutItems(ArrayList<Blob> cutItems) {
         for (Blob b: cutItems) {
             if (blobsMap.get(b.index).contains(b)){
                 if (blobsMap.get(b.index).size() == 1){
@@ -162,6 +152,7 @@ public class BlobModel {
                 }
             }
         }
+        notifySubscribers();
     }
 
     public void moveMultiBlobs(ArrayList<Blob> collection, double dx, double dy) {

@@ -25,13 +25,12 @@ public class DeleteCommand implements TargetCommand {
 
     public void doIt() {
         if (this.cutItems != null) {
-            model.CutItems(this.cutItems);
-        }
-        model.deleteBlob(myBlob);
+            model.cutItems(this.cutItems);
+        }else {
+            model.deleteBlob(myBlob);}
     }
 
     public void undo() {
-//        System.out.println(myBlob.index);
         if (this.cutItems!= null){
             model.pasteItems(cutItems);
         }
