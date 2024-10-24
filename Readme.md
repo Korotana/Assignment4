@@ -1,5 +1,9 @@
 # Target Practice Graphical Editor
 
+![image](https://github.com/user-attachments/assets/d4bfc67f-2fa3-488c-8e88-68637e3a2f59)
+
+![image](https://github.com/user-attachments/assets/f5b6cc83-aaf6-46a7-9416-00e732f50628)
+
 ## Overview
 In this project I have built a graphical editor in JavaFX that lets the user create targets for people to practice 2D targeting (e.g.,
 to help them improve their performance in arcade-style video games). The editor allows the user to create, resize, and position
@@ -45,9 +49,4 @@ Ensure JavaFX is properly configured in your IDE.
 Import the project into IntelliJ IDEA or another IDE that supports JavaFX.
 Run the application by executing Main.java.
 
-## Final Results
-
-![image](https://github.com/user-attachments/assets/d4bfc67f-2fa3-488c-8e88-68637e3a2f59)
-
-![image](https://github.com/user-attachments/assets/f5b6cc83-aaf6-46a7-9416-00e732f50628)
 
