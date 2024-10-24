@@ -36,14 +36,14 @@ a final report.
     Performance Report: A chart of performance data is shown, plotting Movement Time (MT) vs. Index of Difficulty (ID).
     Mode Switching: Control-E switches back to the editor view.
 
-## Folders
-  Main.java: Entry point for the application.
-  Controller.java: Manages interactions and user events.
-  InteractionModel.java: Stores application state and implements undo/redo, clipboard, and test mode logic.
-  View.java: Handles rendering the targets and user interface.
-  TargetCommand.java: Interface for command pattern implementation of undo/redo.
-  TargetClipboard.java: Stores targets for cut/copy/paste operations.
-  TargetTrainerView.java: Manages the test mode view and handles performance tracking.
+### Folders
+    Main.java: Entry point for the application.
+    Controller.java: Manages interactions and user events.
+    InteractionModel.java: Stores application state and implements undo/redo, clipboard, and test mode logic.
+    View.java: Handles rendering the targets and user interface.
+    TargetCommand.java: Interface for command pattern implementation of undo/redo.
+    TargetClipboard.java: Stores targets for cut/copy/paste operations.
+    TargetTrainerView.java: Manages the test mode view and handles performance tracking.
 
 Ensure JavaFX is properly configured in your IDE.
 Import the project into IntelliJ IDEA or another IDE that supports JavaFX.
